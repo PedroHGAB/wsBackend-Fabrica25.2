@@ -1,0 +1,14 @@
+{% extends "carros/base.html" %}
+{% block title %}Marcas — FIPE{% endblock %}
+{% block content %}
+<h2>Marcas</h2>
+<div class="card">
+  <ul>
+    {% for m in marcas %}
+      <li><a class="btn" href="{% url 'carros:modelos' m.codigo %}">{{ m.nome }}</a></li>
+    {% empty %}
+      <li class="muted">Nenhuma marca encontrada.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

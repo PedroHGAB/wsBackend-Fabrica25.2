@@ -68,3 +68,77 @@ class CarroExcluirView(DeleteView):
 	def get_success_url(self):
 		return reverse_lazy("carros:garagem_detalhe", kwargs={"pk": self.object.garagem_id})
 
+
+def marcas(request):
+	try:
+		r = requests.get(f"{API_FIPE_URL}/marcas")
+		marcas = r.json()
+	except Exception:
+		messages.error(request, "Falha ao obter marcas da FIPE.")
+		marcas = []
+	return render(request, "carros/marcas.html", {"marcas": marcas})
+
+
+def modelos(request, marca_id):
+	try:
+		r = requests.get(f"{API_FIPE_URL}/marcas/{marca_id}/modelos")
+		modelos = r.json().get("modelos", [])
+	except Exception:
+		messages.error(request, "Falha ao obter modelos da FIPE.")
+		modelos = []
+	return render(request, "carros/modelos.html", {"modelos": modelos, "marca_id": marca_id})
+
+
+def anos(request, marca_id, modelo_id):
+	try:
+		r = requests.get(f"{API_FIPE_URL}/marcas/{marca_id}/modelos/{modelo_id}/anos")
+		anos = r.json()
+	except Exception:
+		messages.error(request, "Falha ao obter anos da FIPE.")
+		anos = []
+	return render(request, "carros/anos.html", {"anos": anos, "marca_id": marca_id, "modelo_id": modelo_id})
+
+
+def detalhe(request, marca_id, modelo_id, ano_codigo):
+	try:
+		r = requests.get(f"{API_FIPE_URL}/marcas/{marca_id}/modelos/{modelo_id}/anos/{ano_codigo}")
+		carro = r.json()
+	except Exception:
+		messages.error(request, "Falha ao obter detalhes do carro.")
+		carro = {}
+
+	garagens = Garagem.objects.all().order_by("nome")
+
+	if request.method == "POST":
+		garagem = get_object_or_404(Garagem, pk=request.POST.get("garagem_id"))
+
+		ano = carro.get("AnoModelo", 0)
+		ano = int(ano)
+
+		preco = brl_to_decimal(carro.get("Valor", "0"))
+
+		CarroSalvo.objects.create(
+			garagem=garagem,
+			marca=carro.get("Marca", ""),
+			modelo=carro.get("Modelo", ""),
+			ano=ano,
+			preco=preco,
+		)
+		messages.success(request, "Carro salvo na garagem!")
+
+		return redirect("carros:garagem_detalhe", pk=garagem.id)
+
+	return render(request, "carros/detalhe.html", {"carro": carro, "garagens": garagens})
+
+
+# Função que converte string do campo preço para Decimal feita com ia, pois a API retorna o preço nesse formato.
+def brl_to_decimal(texto: str) -> Decimal:
+	limpo = (texto.replace("R$", "")
+					.replace("\xa0", "")
+					.replace(" ", "")
+					.replace(".", "")
+					.replace(",", "."))
+	try:
+		return Decimal(limpo)
+	except InvalidOperation:
+		return Decimal("0.00")

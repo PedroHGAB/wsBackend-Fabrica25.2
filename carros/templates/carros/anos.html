@@ -1,0 +1,15 @@
+{% extends "carros/base.html" %}
+{% block title %}Anos — FIPE{% endblock %}
+{% block content %}
+<h2>Anos</h2>
+<div class="card">
+  <ul>
+    {% for a in anos %}
+      <li><a class="btn" href="{% url 'carros:detalhe' marca_id modelo_id a.codigo %}">{{ a.nome }}</a></li>
+    {% empty %}
+      <li class="muted">Nenhum ano encontrado.</li>
+    {% endfor %}
+  </ul>
+  <p><a class="btn" href="{% url 'carros:modelos' marca_id %}">↩ Voltar aos modelos</a></p>
+</div>
+{% endblock %}

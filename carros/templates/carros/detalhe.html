@@ -1,0 +1,26 @@
+{% extends "carros/base.html" %}
+{% block title %}Detalhe — FIPE{% endblock %}
+{% block content %}
+<h2>Detalhe do carro</h2>
+<div class="card">
+  {% if carro.Marca %}
+    <p><strong>{{ carro.Marca }} {{ carro.Modelo }}</strong> — Ano: {{ carro.AnoModelo }}</p>
+    <p>Preço FIPE: <strong>{{ carro.Valor }}</strong></p>
+    <form method="post">
+      {% csrf_token %}
+      <label for="garage_id">Salvar na garagem:</label>
+      <select name="garagem_id" id="garage_id" required>
+        <option value="">Selecione…</option>
+        {% for g in garagens %}
+          <option value="{{ g.id }}">{{ g.nome }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
+    <p class="muted">Não tem garagem? <a href="{% url 'carros:garagem_nova' %}">Criar garagem</a></p>
+  {% else %}
+    <p class="muted">Dados não disponíveis.</p>
+  {% endif %}
+  <p><a class="btn" href="javascript:history.back()">↩ Voltar</a></p>
+</div>
+{% endblock %}
