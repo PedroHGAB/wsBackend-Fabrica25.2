@@ -1,0 +1,15 @@
+{% extends "carros/base.html" %}
+{% block title %}Minhas Garagens{% endblock %}
+{% block content %}
+<h2>Minhas Garagens</h2>
+<p><a class="btn btn-primary" href="{% url 'carros:garagem_nova' %}">+ Nova Garagem</a></p>
+<div class="card">
+  <ul>
+    {% for g in garagens %}
+      <li><a class="btn" href="{% url 'carros:garagem_detalhe' g.id %}">{{ g.nome }}</a></li>
+    {% empty %}
+      <li class="muted">Nenhuma garagem ainda.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

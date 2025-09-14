@@ -1,0 +1,25 @@
+{% extends "carros/base.html" %}
+{% block title %}Garagem — {{ garagem.nome }}{% endblock %}
+{% block content %}
+<h2>{{ garagem.nome }}</h2>
+
+<div class="card">
+  <h3>Carros desta garagem</h3>
+  <ul>
+    {% for c in garagem.carros.all %}
+      <li>
+        {{ c.marca }} {{ c.modelo }} {{ c.ano }} — R$ {{ c.preco }}
+        <a class="btn btn-danger" href="{% url 'carros:carro_excluir' c.id %}">Remover</a>
+      </li>
+    {% empty %}
+      <li class="muted">Nenhum carro nesta garagem.</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<p>
+  <a class="btn" href="{% url 'carros:garagem_lista' %}">↩ Voltar</a>
+  <a class="btn" href="{% url 'carros:garagem_editar' garagem.id %}">Editar nome</a>
+  <a class="btn btn-danger" href="{% url 'carros:garagem_excluir' garagem.id %}">Excluir garagem</a>
+</p>
+{% endblock %}

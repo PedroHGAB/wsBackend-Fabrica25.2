@@ -1,0 +1,12 @@
+{% extends "carros/base.html" %}
+{% block title %}Remover Carro{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Remover carro</h2>
+  <p>Tem certeza que deseja remover este carro da garagem <strong>{{ object.garagem.nome }}</strong>?</p>
+  <form method="post">{% csrf_token %}
+    <button class="btn btn-danger" type="submit">Confirmar</button>
+    <a class="btn" href="{% url 'carros:garagem_detalhe' object.garagem.id %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

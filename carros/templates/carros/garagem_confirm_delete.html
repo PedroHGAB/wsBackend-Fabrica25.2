@@ -1,0 +1,13 @@
+{% extends "carros/base.html" %}
+{% block title %}Excluir Garagem{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Excluir garagem</h2>
+  <p>Tem certeza que deseja excluir <strong>{{ object.nome }}</strong>?
+     <br><em>(Os carros dessa garagem serão removidos.)</em></p>
+  <form method="post">{% csrf_token %}
+    <button class="btn btn-danger" type="submit">Confirmar</button>
+    <a class="btn" href="{% url 'carros:garagem_detalhe' object.id %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

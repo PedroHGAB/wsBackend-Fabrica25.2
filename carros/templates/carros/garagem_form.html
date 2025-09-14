@@ -1,0 +1,17 @@
+{% extends "carros/base.html" %}
+{% block title %}{% if object %}Editar Garagem{% else %}Nova Garagem{% endif %}{% endblock %}
+{% block content %}
+<h2>{% if object %}Editar Garagem{% else %}Nova Garagem{% endif %}</h2>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">{% if object %}Salvar alterações{% else %}Salvar{% endif %}</button>
+    {% if object %}
+      <a class="btn" href="{% url 'carros:garagem_detalhe' object.id %}">Cancelar</a>
+    {% else %}
+      <a class="btn" href="{% url 'carros:garagem_lista' %}">Cancelar</a>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

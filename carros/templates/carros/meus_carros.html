@@ -1,0 +1,18 @@
+{% extends "carros/base.html" %}
+{% block title %}Meus Carros{% endblock %}
+{% block content %}
+<h2>Meus Carros (todas as garagens)</h2>
+<div class="card">
+  <ul>
+    {% for c in carros %}
+      <li>
+        {{ c.marca }} {{ c.modelo }} {{ c.ano }} — R$ {{ c.preco }}
+        (<em>{{ c.garagem.nome }}</em>)
+        <a class="btn btn-danger" href="{% url 'carros:carro_excluir' c.id %}">Remover</a>
+      </li>
+    {% empty %}
+      <li class="muted">Nenhum carro salvo.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
